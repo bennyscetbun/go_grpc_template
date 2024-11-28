@@ -1,0 +1,94 @@
+syntax = "proto3";
+
+package xxx_your_app_xxx.apiproto;
+
+import "google/protobuf/timestamp.proto";
+
+option go_package = "github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/rpc/apiproto;apiproto";
+
+
+service Api {
+  rpc Signup(SignupRequest) returns (SignupReply) {}
+  rpc Login (LoginRequest) returns (LoginReply) {}
+  rpc RefreshToken(RefreshTokenRequest) returns (RefreshTokenReply) {}
+
+  rpc VerifyEmail(VerifyEmailRequest) returns (VerifyEmailReply) {}
+
+  rpc ChangeEmail(ChangeEmailRequest) returns (ChangeEmailReply) {}
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordReply) {}
+  rpc ChangeUsername(ChangeUsernameRequest) returns (ChangeUsernameReply) {}
+
+  //endService
+}
+
+
+message UserInfo {
+  string userId = 1;
+  string username = 2;
+  optional string verifiedEmail = 3;
+  optional string newEmail = 4;
+  bool isVerified = 5;
+  google.protobuf.Timestamp createdAt = 6;
+  google.protobuf.Timestamp updatedAt = 7;
+}
+
+message SignupRequest {
+  string email = 1;
+  string username = 2;
+  string password = 3;
+}
+
+message SignupReply {
+  UserInfo userInfo = 1;
+  string token = 2;
+}
+
+message LoginRequest {
+  string identifier = 1;
+  string password = 3;
+}
+
+message LoginReply {
+  UserInfo userInfo = 1;
+  string token = 2;
+}
+
+message RefreshTokenRequest {
+}
+
+message RefreshTokenReply {
+  string token = 1;
+}
+
+message VerifyEmailRequest {
+  string verifyId = 1;
+  string email = 2;
+}
+
+message VerifyEmailReply {
+  UserInfo userInfo = 1;
+}
+
+message ChangeEmailRequest {
+  string newEmail = 1;
+}
+
+message ChangeEmailReply {
+  UserInfo userInfo = 1;
+}
+
+message ChangePasswordRequest {
+  string oldPassword = 1;
+  string newPassword = 2;
+}
+
+message ChangePasswordReply {
+}
+
+message ChangeUsernameRequest {
+  string newUsername = 1;
+}
+
+message ChangeUsernameReply {
+  UserInfo userInfo = 1;
+}

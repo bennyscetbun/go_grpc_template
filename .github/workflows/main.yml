@@ -1,0 +1,57 @@
+name: CI/CD Pipeline
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      # Label used to access the service container
+      postgres:
+        # Docker Hub image
+        image: postgres:16.0
+        # Provide the password for postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        # Set health checks to wait until postgres has started
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Go
+        uses: actions/setup-go@v4
+        with:
+          go-version: '1.21.x'
+      - name: Install dependencies
+        working-directory: ./backend
+        run: go mod download
+      - name: check database migrate
+        working-directory: ./backend
+        env:
+          DBPASSWD: postgres
+        run: go run ./cmd/database_check
+      - name: Generate files
+        working-directory: ./
+        env:
+          DBPASSWD: postgres
+        run: bash ./scripts/generate_files.sh
+      - name: Generate bundle
+        working-directory: ./
+        env:
+          DBPASSWD: postgres
+        run: bash ./scripts/bundle_front_end.sh
+      - name: Build
+        working-directory: ./
+        run: bash ./scripts/build.sh
+      - name: Test with the Go CLI
+        working-directory: ./backend
+        run: go test ./...
+      - name: Build Docker image
+        run: docker build -f common/ci/dockerfile -t app .

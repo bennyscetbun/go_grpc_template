@@ -1,0 +1,21 @@
+FROM golang:alpine3.18
+
+WORKDIR /app
+
+COPY backend/go.mod backend/go.su[m] ./
+
+RUN go mod download
+
+COPY backend .
+
+RUN go build -o /bin/app ./cmd/app
+
+
+FROM alpine:3.18
+COPY --from=0 /bin/app /bin/app
+COPY backend/resources /resources
+COPY frontend/index.html /resources/frontend/index.html
+COPY frontend/dist /resources/frontend/app
+
+ENTRYPOINT [ "/bin/app" ]
+CMD [ "--migration_file_path", "/resources/database/migrations", "/resources/frontend/index.html", "/resources/frontend/app", "/resources/" ]

@@ -1,0 +1,91 @@
+{
+    "macros.list": {
+        "make_rpc_full": [
+            "editor.action.transformToPascalcase",
+            "editor.action.clipboardCutAction",
+            "macros.make_rpc_service",
+            "macros.make_rpc_params"
+        ],
+        "make_rpc_service": [
+            {
+                "command": "editor.actions.findWithArgs",
+                "args": {
+                    "isRegex": true,
+                    "searchString": "^\\s*//endService$"
+                }
+            },
+            "editor.action.nextMatchFindAction",
+            "closeFindWidget",
+            "cursorHome",
+            {
+                "command": "type",
+                "args": {
+                    "text": "rpc "
+                }
+            },
+            "editor.action.clipboardPasteAction",
+            {
+                "command": "type",
+                "args": {
+                    "text": "("
+                }
+            },
+            "editor.action.clipboardPasteAction",
+            {
+                "command": "type",
+                "args": {
+                    "text": "Request) returns ("
+                }
+            },
+            "editor.action.clipboardPasteAction",
+            {
+                "command": "type",
+                "args": {
+                    "text": "Reply) {}\n"
+                }
+            },
+        ],
+        "make_rpc_params": [
+            "cursorBottom",
+            {
+                "command": "type",
+                "args": {
+                    "text": "\n\nmessage "
+                }
+            },
+            "editor.action.clipboardPasteAction",
+            {
+                "command": "type",
+                "args": {
+                    "text": "Request "
+                }
+            },
+            {
+                "command": "editor.action.insertSnippet",
+                "args": {
+                    "snippet": "{\n}"
+                }
+            },
+            "cursorBottom",
+            {
+                "command": "type",
+                "args": {
+                    "text": "\n\nmessage "
+                }
+            },
+            "editor.action.clipboardPasteAction",
+            {
+                "command": "type",
+                "args": {
+                    "text": "Reply "
+                }
+            },
+            {
+                "command": "editor.action.insertSnippet",
+                "args": {
+                    "snippet": "{\n}"
+                }
+            },
+        ]
+    }
+}
