@@ -1,8 +1,8 @@
 package apihelpers
 
 import (
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/database/dbmodels"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/rpc/apiproto"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/database/dbmodels"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/rpc/apiproto"
 	"google.golang.org/protobuf/types/known/timestamppb"
 )
 

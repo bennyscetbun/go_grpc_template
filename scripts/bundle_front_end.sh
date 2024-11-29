@@ -1,6 +1,6 @@
 #!/bin/bash
 
-node_image="xxx_your_app_xxx/node"
+node_image="xxxyourappyyy/node"
 
 cd "$(dirname "$0")"
 . ./library.sh

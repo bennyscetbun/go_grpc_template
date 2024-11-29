@@ -3,11 +3,11 @@ package api
 import (
 	"context"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/rpc/apiproto"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/apihelpers"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/grpcerrors"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/logger"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/passwd"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/rpc/apiproto"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/apihelpers"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/grpcerrors"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/logger"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/passwd"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )

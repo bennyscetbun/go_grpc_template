@@ -13,9 +13,9 @@ import (
 	"testing"
 	"time"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/database"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/rpc/apiproto"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/testhelpers"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/database"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/rpc/apiproto"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/testhelpers"
 	smtpmock "github.com/mocktools/go-smtp-mock/v2"
 	"github.com/stretchr/testify/assert"
 	"github.com/testcontainers/testcontainers-go"

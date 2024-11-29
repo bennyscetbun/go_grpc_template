@@ -6,7 +6,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/random"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/random"
 	smtpmock "github.com/mocktools/go-smtp-mock/v2"
 	"github.com/stretchr/testify/assert"
 )

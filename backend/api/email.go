@@ -5,11 +5,11 @@ import (
 	"context"
 	"time"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/database/dbmodels"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/database/dbqueries"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/emails"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/environment"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/random"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/database/dbmodels"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/database/dbqueries"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/emails"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/environment"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/random"
 	"github.com/ztrue/tracerr"
 )
 

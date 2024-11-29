@@ -5,7 +5,7 @@ import (
 	"flag"
 	"fmt"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/environment"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/environment"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/postgres"
 	_ "github.com/golang-migrate/migrate/v4/source/file"

@@ -4,7 +4,7 @@ import (
 	"flag"
 	"log"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/database"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/database"
 	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "github.com/jackc/pgx/v5/stdlib"
 )

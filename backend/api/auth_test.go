@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/rpc/apiproto"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/random"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/testhelpers"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/rpc/apiproto"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/random"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/testhelpers"
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/stretchr/testify/assert"
 	"google.golang.org/grpc/metadata"
@@ -14,7 +14,7 @@ import (
 
 func validSignupRequest() *apiproto.SignupRequest {
 	name := "A" + random.RandString(10)
-	email := name + "@xxx_your_app_xxx.com"
+	email := name + "@xxxyourappyyy.com"
 	passwd := random.RandString(12) + "@A1a"
 	return &apiproto.SignupRequest{
 		Username: name,
@@ -33,7 +33,7 @@ func TestSignup(t *testing.T) {
 	defer closer()
 
 	name := "A" + random.RandString(10)
-	email := name + "@xxx_your_app_xxx.com"
+	email := name + "@xxxyourappyyy.com"
 	passwd := random.RandString(12) + "@A1a"
 	{
 		ret, err := client.Signup(ctx, &apiproto.SignupRequest{
@@ -209,7 +209,7 @@ func TestLogin(t *testing.T) {
 	defer closer()
 
 	name := "A" + random.RandString(10)
-	email := name + "@xxx_your_app_xxx.com"
+	email := name + "@xxxyourappyyy.com"
 	passwd := random.RandString(12) + "@A1a"
 
 	{
@@ -290,7 +290,7 @@ func TestRefreshToken(t *testing.T) {
 	defer closer()
 
 	name := "A" + random.RandString(10)
-	email := name + "@xxx_your_app_xxx.com"
+	email := name + "@xxxyourappyyy.com"
 	passwd := random.RandString(12) + "@A1a"
 
 	{
@@ -335,7 +335,7 @@ func TestVerifyEmail(t *testing.T) {
 	defer closer()
 
 	name := "A" + random.RandString(10)
-	email := name + "@xxx_your_app_xxx.com"
+	email := name + "@xxxyourappyyy.com"
 	passwd := random.RandString(12) + "@A1a"
 
 	{

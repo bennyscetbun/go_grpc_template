@@ -1,4 +1,4 @@
-module github.com/bennyscetbun/xxx_your_app_xxx/backend
+module github.com/bennyscetbun/xxxyourappyyy/backend
 
 go 1.22
 

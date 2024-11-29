@@ -1,10 +1,10 @@
 syntax = "proto3";
 
-package xxx_your_app_xxx.apiproto;
+package xxxyourappyyy.apiproto;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/rpc/apiproto;apiproto";
+option go_package = "github.com/bennyscetbun/xxxyourappyyy/backend/generated/rpc/apiproto;apiproto";
 
 
 service Api {

@@ -1,6 +1,6 @@
 services:
   server:
-    image: xxx_your_app_xxx/app
+    image: xxxyourappyyy/app
     build:
       context: ./
       dockerfile: ./common/ci/dockerfile

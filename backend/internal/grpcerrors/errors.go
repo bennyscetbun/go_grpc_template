@@ -3,8 +3,8 @@ package grpcerrors
 import (
 	"strings"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/rpc/apiproto"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/logger"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/rpc/apiproto"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/logger"
 	"github.com/jackc/pgx/v5/pgconn"
 	"github.com/ztrue/tracerr"
 	"google.golang.org/grpc/codes"

@@ -6,8 +6,8 @@ import (
 	"log"
 	"path/filepath"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/cmd/database_gen/generatehelpers"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/database"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/cmd/database_gen/generatehelpers"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/database"
 	"gorm.io/driver/postgres"
 	"gorm.io/gen"
 	"gorm.io/gorm"

@@ -4,9 +4,9 @@ import (
 	"context"
 	"testing"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/rpc/apiproto"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/random"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/testhelpers"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/rpc/apiproto"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/random"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/testhelpers"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -4,8 +4,8 @@ import (
 	"context"
 	"net/smtp"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/environment"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/logger"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/environment"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/logger"
 	"github.com/ztrue/tracerr"
 )
 

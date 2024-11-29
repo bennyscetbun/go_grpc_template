@@ -5,9 +5,9 @@ import (
 	"strings"
 	"time"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/apihelpers"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/grpcerrors"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/internal/logger"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/apihelpers"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/grpcerrors"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/logger"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -20,7 +20,7 @@ const (
 
 func extractMethodName(fullMethod string) string {
 	// Define the prefix to remove
-	prefix := "/xxx_your_app_xxx.apiproto.Api/"
+	prefix := "/xxxyourappyyy.apiproto.Api/"
 
 	// Use TrimPrefix to remove the prefix from the full method name
 	method := strings.TrimPrefix(fullMethod, prefix)

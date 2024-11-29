@@ -4,8 +4,8 @@ import (
 	"html/template"
 	"path/filepath"
 
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/database/dbqueries"
-	"github.com/bennyscetbun/xxx_your_app_xxx/backend/generated/rpc/apiproto"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/database/dbqueries"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/rpc/apiproto"
 	"github.com/ztrue/tracerr"
 	"google.golang.org/grpc"
 	"gorm.io/gorm"

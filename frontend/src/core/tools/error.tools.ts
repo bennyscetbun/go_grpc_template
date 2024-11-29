@@ -31,7 +31,7 @@ export function retrieveRPCError(err: grpcWeb.RpcError): ErrorInfo {
 
 function parseErrorDetails(details: any): ErrorInfo | null {
     const typeUrl = details.getTypeUrl();
-    if (typeUrl != 'type.googleapis.com/xxx_your_app_xxx.apiproto.ErrorInfo') {
+    if (typeUrl != 'type.googleapis.com/xxxyourappyyy.apiproto.ErrorInfo') {
         return null;
     }
     return ErrorInfo.deserializeBinary(details.getValue_asU8());
