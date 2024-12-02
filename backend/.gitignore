@@ -1,3 +1,2 @@
-generated/
-app
-cmd/playground/
+/generated/
+/app
