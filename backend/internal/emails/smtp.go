@@ -29,13 +29,13 @@ func SendEmail(ctx context.Context, from, to, content string) error {
 	if err != nil {
 		return tracerr.Wrap(err)
 	}
-	smtpPasswd, err := environment.GetenvString("SMTPPASSWORD", "")
+	smtpPasswd, err := environment.GetenvString("SMTPPASSWD", "")
 	if err != nil {
 		return tracerr.Wrap(err)
 	}
 	var auth smtp.Auth
 	if smtpUser == "" || smtpPasswd == "" {
-		logger.Warningln("SMTPUSER OR SMTPPASSWORD not set, NO PLAIN AUTH")
+		logger.Warningln("SMTPUSER OR SMTPPASSWD not set, NO PLAIN AUTH")
 	} else {
 		auth = smtp.PlainAuth("", smtpUser, smtpPasswd, smtpHost)
 	}

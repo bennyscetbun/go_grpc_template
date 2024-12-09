@@ -2,8 +2,8 @@
 
 function lib() {
     function build_docker_images() {
-        docker image inspect xxxyourappyyy/node >/dev/null || docker build --build-arg USERID=$(id -u) --build-arg USERGRP=$(id -g) -f ../scripts/dockerfile/node.dockerfile -t xxxyourappyyy/node .
-        docker image inspect xxxyourappyyy/protoc >/dev/null || docker build --build-arg USERID=$(id -u) --build-arg USERGRP=$(id -g) -f ../scripts/dockerfile/protoc.dockerfile -t xxxyourappyyy/protoc .
+        docker image inspect xxxyourappyyy/node >/dev/null || docker build --build-arg USERID=$(id -u) --build-arg USERGRP=$(id -g) -f "$LIBRARY_SH_DIR/dockerfile/node.dockerfile" -t xxxyourappyyy/node .
+        docker image inspect xxxyourappyyy/protoc >/dev/null || docker build --build-arg USERID=$(id -u) --build-arg USERGRP=$(id -g) -f "$LIBRARY_SH_DIR/dockerfile/protoc.dockerfile" -t xxxyourappyyy/protoc .
     }
 
     function get_script_dir() {

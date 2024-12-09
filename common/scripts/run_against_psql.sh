@@ -12,7 +12,7 @@ fi
 # Define the name for your PostgreSQL container
 container_name="postgres.$path_hash"
 
-postgres_image="postgres:16.0"
+postgres_image="postgres:17.2"
 db_password="${DBPASSWD:-password}"
 
 # Check if the container is already running

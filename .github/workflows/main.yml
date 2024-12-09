@@ -41,15 +41,15 @@ jobs:
         working-directory: ./
         env:
           DBPASSWD: postgres
-        run: bash ./scripts/generate_files.sh
+        run: bash ./common/scripts/generate_files.sh
       - name: Generate bundle
         working-directory: ./
         env:
           DBPASSWD: postgres
-        run: bash ./scripts/bundle_front_end.sh
+        run: bash ./common/scripts/bundle_front_end.sh
       - name: Build
         working-directory: ./
-        run: bash ./scripts/build.sh
+        run: bash ./common/scripts/build.sh
       - name: Test with the Go CLI
         working-directory: ./backend
         run: go test ./...
