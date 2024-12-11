@@ -7,8 +7,11 @@ import (
 
 	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/database/dbmodels"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/database/dbqueries"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/rpc/apiproto"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/apihelpers"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/emails"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/environment"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/grpcerrors"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/random"
 	"github.com/ztrue/tracerr"
 )
@@ -46,4 +49,47 @@ func (g *GRPCServer) insertVerifyEmail(ctx context.Context, userID, email string
 		}
 		return nil
 	}, nil
+}
+
+func (g *GRPCServer) VerifyEmail(ctx context.Context, req *apiproto.VerifyEmailRequest) (ret *apiproto.VerifyEmailReply, err error) {
+	if req.Email == "" {
+		return nil, grpcerrors.ErrorFieldViolationEmpty("email")
+	}
+	if req.VerifyId == "" {
+		return nil, grpcerrors.ErrorFieldViolationEmpty("verify_id")
+	}
+
+	tx := g.DBQueries.Begin()
+	defer func() {
+		if err != nil {
+			_ = tx.Rollback()
+		}
+	}()
+	ev := tx.EmailVerification
+	verif, err := ev.WithContext(ctx).Where(ev.Email.Eq(req.Email), ev.ID.Eq(req.VerifyId)).First()
+	if err != nil {
+		return nil, grpcerrors.GormToGRPCError(err, nil)
+	}
+	if verif.UsedAt != nil {
+		return nil, grpcerrors.ErrorFieldViolationAlreadyTaken("verify_id")
+	}
+	curTime := time.Now()
+	verif.UsedAt = &curTime
+	if err := ev.WithContext(ctx).Save(verif); err != nil {
+		return nil, grpcerrors.GormToGRPCError(err, nil)
+	}
+	u := tx.User
+	user, err := u.WithContext(ctx).Where(u.ID.Eq(verif.UserID)).First()
+	if err != nil {
+		return nil, grpcerrors.GormToGRPCError(err, nil)
+	}
+	user.IsVerified = true
+	user.VerifiedEmail = &req.Email
+	if err := u.WithContext(ctx).Save(user); err != nil {
+		return nil, grpcerrors.ErrorInternal(true)
+	}
+	if err := tx.Commit(); err != nil {
+		return nil, grpcerrors.GormToGRPCError(err, nil)
+	}
+	return &apiproto.VerifyEmailReply{UserInfo: apihelpers.UserDbModelToProto(user)}, nil
 }

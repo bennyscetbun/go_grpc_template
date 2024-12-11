@@ -7,7 +7,8 @@ import (
 
 	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/apihelpers"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/grpcerrors"
-	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/logger"
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/ztrue/tracerr"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
@@ -50,6 +51,35 @@ func methodRequiresAuthentication(fullMethod string) bool {
 	return true
 }
 
+func (g *GRPCServer) extractClaimsFromToken(_ context.Context, token string) (jwt.MapClaims, error) {
+	t, err := jwt.Parse(token, func(token *jwt.Token) (interface{}, error) {
+		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
+			return nil, tracerr.Errorf("unexpected signing method: %v", token.Header["alg"])
+		}
+		return g.TokenSecret, nil
+	})
+	if err != nil {
+		return nil, grpcerrors.ErrorInvalidToken()
+	}
+	if claims, ok := t.Claims.(jwt.MapClaims); ok && t.Valid {
+		return claims, nil
+	}
+	return nil, grpcerrors.ErrorInvalidToken()
+}
+
+func (g *GRPCServer) validateToken(ctx context.Context, token string) (string, error) {
+	claims, err := g.extractClaimsFromToken(ctx, token)
+	if err != nil {
+		return "", err
+	}
+	id, ok := claims[tokenUserIDKey].(string)
+	if !ok {
+		return "", grpcerrors.ErrorInvalidToken()
+	}
+
+	return id, nil
+}
+
 func (g *GRPCServer) AuthInterceptor(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handler grpc.UnaryHandler) (interface{}, error) {
 	if !methodRequiresAuthentication(info.FullMethod) {
 		return handler(ctx, req)
@@ -65,18 +95,12 @@ func (g *GRPCServer) AuthInterceptor(ctx context.Context, req interface{}, info 
 		return nil, grpcerrors.ErrorUnauthenticated()
 	}
 
-	token := authTokens[0] // Assuming a single token is sent in the header.
-	ut := g.DBQueries.UserToken
-	dbToken, err := ut.WithContext(ctx).Where(ut.ID.Eq(token)).First()
+	userID, err := g.validateToken(ctx, authTokens[0]) // Assuming a single token is sent in the header.
 	if err != nil {
-		logger.Errorln(err)
 		return nil, err
 	}
-	if dbToken.ExpiredAt.Before(time.Now()) {
-		return nil, grpcerrors.ErrorUnauthenticated()
-	}
 
-	ctx = context.WithValue(ctx, apihelpers.UserIdContextKey, dbToken.UserID)
+	ctx = context.WithValue(ctx, apihelpers.UserIdContextKey, userID)
 	return handler(ctx, req)
 }
 

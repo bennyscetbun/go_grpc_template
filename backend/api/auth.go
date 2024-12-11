@@ -5,14 +5,14 @@ import (
 	"time"
 
 	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/database/dbmodels"
-	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/database/dbqueries"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/rpc/apiproto"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/apihelpers"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/grpcerrors"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/logger"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/passwd"
-	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/random"
+	"github.com/golang-jwt/jwt/v5"
 	"github.com/google/uuid"
+	"github.com/ztrue/tracerr"
 	"golang.org/x/crypto/bcrypt"
 	"gorm.io/gorm"
 )
@@ -20,15 +20,24 @@ import (
 const (
 	authorizationHeader = "authorization"
 	tokenExpireAfter    = time.Minute * 10
+	tokenUserIDKey      = "user_id"
 )
 
-func (g *GRPCServer) refreshToken(ctx context.Context, userId string, db *dbqueries.Query) (string, error) {
-	token := random.RandString(20)
-	ut := db.UserToken
-	if err := ut.WithContext(ctx).Create(&dbmodels.UserToken{ID: token, UserID: userId, ExpiredAt: time.Now().Add(tokenExpireAfter)}); err != nil {
-		return "", err
+func (g *GRPCServer) refreshToken(_ context.Context, userID string) (string, error) {
+	// build JWT with necessary claims.
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
+		tokenUserIDKey: userID,
+		"iat":          time.Now().Unix(),
+		"exp":          time.Now().Add(tokenExpireAfter).Unix(), // expire after 15 minutes.
+		"other":        time.Now().UnixMilli(),
+	}, nil)
+
+	// sign token using the server's secret key.
+	signed, err := token.SignedString(g.TokenSecret)
+	if err != nil {
+		return "", tracerr.Errorf("failed to sign JWT: %w", err)
 	}
-	return token, nil
+	return signed, nil
 }
 
 // Login implements protobuf.ApiServer.
@@ -51,7 +60,7 @@ func (g *GRPCServer) Login(ctx context.Context, req *apiproto.LoginRequest) (*ap
 		return nil, grpcerrors.ErrorInternal(true)
 	}
 
-	token, err := g.refreshToken(ctx, user.ID, g.DBQueries)
+	token, err := g.refreshToken(ctx, user.ID)
 	if err != nil {
 		logger.Errorln(err)
 		return nil, grpcerrors.ErrorInternal(true)
@@ -135,7 +144,7 @@ func (g *GRPCServer) Signup(ctx context.Context, req *apiproto.SignupRequest) (r
 	}
 
 	//make the token first so if the user is not created it s fine
-	token, err := g.refreshToken(ctx, userId, tx.Query)
+	token, err := g.refreshToken(ctx, userId)
 	if err != nil {
 		logger.Errorln(err)
 		return nil, grpcerrors.ErrorInternal(true)
@@ -161,14 +170,13 @@ func (g *GRPCServer) Signup(ctx context.Context, req *apiproto.SignupRequest) (r
 	}, nil
 }
 
-// RefreshToken implements protobuf.ApiServer.
 func (g *GRPCServer) RefreshToken(ctx context.Context, req *apiproto.RefreshTokenRequest) (*apiproto.RefreshTokenReply, error) {
 	userId, ok := ctx.Value(apihelpers.UserIdContextKey).(string)
 	if !ok {
 		logger.Errorln("Cant get the userid from the context")
 		return nil, grpcerrors.ErrorInternal(true)
 	}
-	token, err := g.refreshToken(ctx, userId, g.DBQueries)
+	token, err := g.refreshToken(ctx, userId)
 	if err != nil {
 		logger.Errorln(err)
 		return nil, grpcerrors.ErrorInternal(true)
@@ -176,47 +184,4 @@ func (g *GRPCServer) RefreshToken(ctx context.Context, req *apiproto.RefreshToke
 	return &apiproto.RefreshTokenReply{
 		Token: token,
 	}, nil
-}
-
-func (g *GRPCServer) VerifyEmail(ctx context.Context, req *apiproto.VerifyEmailRequest) (ret *apiproto.VerifyEmailReply, err error) {
-	if req.Email == "" {
-		return nil, grpcerrors.ErrorFieldViolationEmpty("email")
-	}
-	if req.VerifyId == "" {
-		return nil, grpcerrors.ErrorFieldViolationEmpty("verify_id")
-	}
-
-	tx := g.DBQueries.Begin()
-	defer func() {
-		if err != nil {
-			_ = tx.Rollback()
-		}
-	}()
-	ev := tx.EmailVerification
-	verif, err := ev.WithContext(ctx).Where(ev.Email.Eq(req.Email), ev.ID.Eq(req.VerifyId)).First()
-	if err != nil {
-		return nil, grpcerrors.GormToGRPCError(err, nil)
-	}
-	if verif.UsedAt != nil {
-		return nil, grpcerrors.ErrorFieldViolationAlreadyTaken("verify_id")
-	}
-	curTime := time.Now()
-	verif.UsedAt = &curTime
-	if err := ev.WithContext(ctx).Save(verif); err != nil {
-		return nil, grpcerrors.GormToGRPCError(err, nil)
-	}
-	u := tx.User
-	user, err := u.WithContext(ctx).Where(u.ID.Eq(verif.UserID)).First()
-	if err != nil {
-		return nil, grpcerrors.GormToGRPCError(err, nil)
-	}
-	user.IsVerified = true
-	user.VerifiedEmail = &req.Email
-	if err := u.WithContext(ctx).Save(user); err != nil {
-		return nil, grpcerrors.ErrorInternal(true)
-	}
-	if err := tx.Commit(); err != nil {
-		return nil, grpcerrors.GormToGRPCError(err, nil)
-	}
-	return &apiproto.VerifyEmailReply{UserInfo: apihelpers.UserDbModelToProto(user)}, nil
 }

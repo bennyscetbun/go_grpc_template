@@ -17,11 +17,12 @@ type GRPCServer struct {
 	DBQueries             *dbqueries.Query
 	ResourceDirectoryPath string
 	Templates             *template.Template
+	TokenSecret           []byte
 }
 
 var _ apiproto.ApiServer = (*GRPCServer)(nil)
 
-func CreateServer(gormDB *gorm.DB, ResourceDirectoryPath string) (*grpc.Server, error) {
+func CreateServer(gormDB *gorm.DB, ResourceDirectoryPath string, tokenSecret []byte) (*grpc.Server, error) {
 	tmpl, err := template.ParseGlob(filepath.Join(ResourceDirectoryPath, "templates", "*.tmpl.html"))
 	if err != nil {
 		return nil, tracerr.Wrap(err)
@@ -31,6 +32,7 @@ func CreateServer(gormDB *gorm.DB, ResourceDirectoryPath string) (*grpc.Server, 
 		DBQueries:             dbqueries.Use(gormDB),
 		ResourceDirectoryPath: ResourceDirectoryPath,
 		Templates:             tmpl,
+		TokenSecret:           tokenSecret,
 	}
 	grpcServer := grpc.NewServer(
 		grpc.ChainUnaryInterceptor(

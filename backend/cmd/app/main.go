@@ -19,6 +19,7 @@ import (
 	"github.com/bennyscetbun/xxxyourappyyy/backend/api"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/database"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/domains"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/environment"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/logger"
 	"github.com/gin-gonic/autotls"
 	"github.com/gin-gonic/gin"
@@ -73,13 +74,17 @@ func main() {
 	domainName := flag.String("domain", "", "set the domain, if not set https will be disabled")
 	serveFromServer := flag.String("serve_bundle_url", "", "if set serve bundle from server")
 	flag.Parse()
+	tokenSecret := environment.MustGetenvString("TOKEN_SECRET", "")
+	if tokenSecret == "" {
+		logger.Fatalln("Set TOKEN_SECRET environment variable")
+	}
 
 	gormDB, db, err := openDB()
 	if err != nil {
 		log.Fatalln(tracerr.Sprint(err))
 	}
 	defer db.Close()
-	grpcServer, err := api.CreateServer(gormDB, flag.Args()[2])
+	grpcServer, err := api.CreateServer(gormDB, flag.Args()[2], []byte(tokenSecret))
 	if err != nil {
 		logger.Fatalln(tracerr.Sprint(err))
 	}

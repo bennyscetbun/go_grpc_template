@@ -15,6 +15,7 @@ import (
 
 	"github.com/bennyscetbun/xxxyourappyyy/backend/database"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/generated/rpc/apiproto"
+	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/random"
 	"github.com/bennyscetbun/xxxyourappyyy/backend/internal/testhelpers"
 	smtpmock "github.com/mocktools/go-smtp-mock/v2"
 	"github.com/stretchr/testify/assert"
@@ -128,7 +129,7 @@ func server(t *testing.T) (apiproto.ApiClient, *testServers, func(), error) {
 		return nil, nil, nil, tracerr.Wrap(err)
 	}
 
-	baseServer, err := CreateServer(gormDB, "./resources")
+	baseServer, err := CreateServer(gormDB, "./resources", []byte(random.RandString(13)))
 	if err != nil {
 		return nil, nil, nil, err
 	}

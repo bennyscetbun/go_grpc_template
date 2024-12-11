@@ -81,8 +81,14 @@ func ErrorNotFound() error {
 	})
 }
 
+func ErrorInvalidToken() error {
+	return buildError(codes.PermissionDenied, "invalid token", &apiproto.ErrorInfo{
+		Type: apiproto.ErrorType_ERROR_INVALID_TOKEN,
+	})
+}
+
 func ErrorPermissionDenied() error {
-	return buildError(codes.NotFound, "permission denied", &apiproto.ErrorInfo{
+	return buildError(codes.PermissionDenied, "permission denied", &apiproto.ErrorInfo{
 		Type: apiproto.ErrorType_ERROR_PERMISSION_DENIED,
 	})
 }
