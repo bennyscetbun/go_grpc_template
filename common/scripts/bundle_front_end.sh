@@ -29,5 +29,6 @@ function build_bundle() {
 }
 
 build_docker_images
+bash "$LIBRARY_SH_DIR/generate_files.sh"
 run_if_change "$FRONTEND_DIR/package.json" renew_node_modules
 run_if_change "$FRONTEND_DIR/src" build_bundle

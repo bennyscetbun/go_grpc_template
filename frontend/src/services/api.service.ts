@@ -100,7 +100,7 @@ export class ApiService {
     verify(token: string, email: string):Promise<void> {
         let req = new VerifyEmailRequest().setEmail(email).setVerifyid(token);
         return new Promise<void>((resolve, reject) => {
-            this.client.verifyEmail(req).then((value: VerifyEmailReply) => {
+            this.client.verifyEmail(req, null).then((value: VerifyEmailReply) => {
                 if (value.hasUserinfo()) {
                     this.userInfo = value.getUserinfo()!!
                 } else {
